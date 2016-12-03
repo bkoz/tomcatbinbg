@@ -109,7 +109,9 @@ Visit the application url and verify you see the blue rose.
 Need to investigate if these are needed.
 
 ```
+(needed for image pull by dc/testing)
 oc policy add-role-to-user edit system:serviceaccount:bgwar:default
+
 oc policy add-role-to-group system:image-puller system:serviceaccounts:bgwar
 oc policy add-role-to-group system:image-puller system:serviceaccounts:bgwar:deployer
 ```
