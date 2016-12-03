@@ -38,6 +38,8 @@ Pushing image <registry-service-ip>:5000/bgwar/myapp:latest ...
 Pushed 7/7 layers, 100% complete
 Push successful
 ```
+#### Deploy Blue into testing.
+
 Create a deployment config. Replace `<registry-service-ip>`
 with what IP is returned from the logs output above.
 
@@ -93,17 +95,18 @@ Expose the production dc and create a route for the service.
 oc expose dc production --port=8080
 oc expose svc production --name=production --hostname=production.$SUBDOMAIN
 ```
+#### Deploy Blue app into production.
 
 Promote the application to production by tagging the image stream.
 ```
-oc tag bgwar/myapp:latest bgwar/myapp:production
+oc tag myapp:latest myapp:production
 Tag myapp:production set to bgwar/myapp@sha256:5ba60b060226456754ba2a37963209b4771c216a3da51a707fe919c620d999f8.
 
 oc deploy production --latest
 ```
 Visit the application url and verify you see the blue rose.
 
-Need to investigate is these are needed.
+Need to investigate if these are needed.
 
 ```
 oc policy add-role-to-user edit system:serviceaccount:bgwar:default
@@ -111,14 +114,13 @@ oc policy add-role-to-group system:image-puller system:serviceaccounts:bgwar
 oc policy add-role-to-group system:image-puller system:serviceaccounts:bgwar:deployer
 ```
 
-#### Green deployment to production
+#### Deploy Green app into production
 
 ```
-$ cp wars/green.war source/deployments/ROOT.war 
-[bkozdemb@phrygian tomcatbinbg]$ oc start-build myapp --from-dir=source
+cp wars/green.war source/deployments/ROOT.war 
+oc start-build myapp --from-dir=source
 oc deploy testing --latest
 ```
-Verify green app has been deployed.
 
 Re-tag green for production.
 ```
@@ -132,3 +134,4 @@ Wait for Catalina Server to finish starting.
 
 ```
 
+Verify green app has been deployed into production.
