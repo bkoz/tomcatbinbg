@@ -1,4 +1,4 @@
-# Blue/Green binary deploy to Tomcat on OpenShift v3.3
+# Blue/Green binary deployment to Tomcat on OpenShift v3.3
 
 ## (Work in progress) Deploy from testing to production.
 
