@@ -2,11 +2,12 @@
 
 ## (Work in progress) Deploy from testing to production.
 
-### Global config
+### Configuration
+
+#### Set OPENSHIFT_SERVER to match your OpenShift API server.
 
 ```
-SUBDOMAIN=ose-apps.haveopen.com
-OPENSHIFT_SERVER=masteroselab-bkocp33-utzuqe0l.srv.ravcloud.com
+OPENSHIFT_SERVER=masteroselab-bkocp33-utzuqe0l.srv.ravcloud.com:8443
 ```
 Clone this git repo locally.
 
@@ -18,7 +19,7 @@ cp wars/blue.war source/deployments/ROOT.war
 Login to OpenShift, create a project, a new build and start the build.
 
 ```
-oc login $OPENSHIFT_SERVER:8443
+oc login $OPENSHIFT_SERVER
 oc new-project bgwar
 ```
 
@@ -64,7 +65,7 @@ Expose the testing application and create a route for it.
 
 ```
 oc expose dc testing --port=8080
-oc expose svc testing --name=testing --hostname=testing.$SUBDOMAIN 
+oc expose svc testing --name=testing 
 ```
 Get the hostname of the route and visit your application using a web browser.
 
@@ -93,7 +94,7 @@ Expose the production dc and create a route for the service.
 
 ```
 oc expose dc production --port=8080
-oc expose svc production --name=production --hostname=production.$SUBDOMAIN
+oc expose svc production --name=production 
 ```
 #### Deploy Blue app into production.
 
@@ -109,7 +110,7 @@ Visit the application url and verify you see the blue rose.
 Need to investigate if these are needed.
 
 ```
-(needed for image pull by dc/testing)
+(Maybe needed for image pull by dc/production)
 oc policy add-role-to-user edit system:serviceaccount:bgwar:default
 
 oc policy add-role-to-group system:image-puller system:serviceaccounts:bgwar
@@ -118,19 +119,20 @@ oc policy add-role-to-group system:image-puller system:serviceaccounts:bgwar:dep
 
 #### Deploy Green app into production
 
+Build a green version of the app and deploy it into testing.
+
 ```
 cp wars/green.war source/deployments/ROOT.war 
 oc start-build myapp --from-dir=source
 oc deploy testing --latest
 ```
 
-Re-tag green for production.
+Re-tag the green app for production.
 ```
 oc tag bgwar/myapp:latest bgwar/myapp:production
 oc deploy production --latest
 oc logs dc/production -f
 --> Success
-oc logs production-<deployment#>-<pod-id> -f
 ```
 Wait for Catalina Server to finish starting.
 
