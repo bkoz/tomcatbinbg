@@ -101,25 +101,25 @@ oc expose svc production --name=production
 Promote the application to production by tagging the image stream.
 ```
 oc tag myapp:latest myapp:production
+```
+```
 Tag myapp:production set to bgwar/myapp@sha256:5ba60b060226456754ba2a37963209b4771c216a3da51a707fe919c620d999f8.
 
+```
+```
 oc deploy production --latest
 ```
 Visit the application url and verify you see the blue rose.
 
-Need to investigate if these are needed.
 
+Earlier versions of OpenShift may need this user role for the image pull to suceed.
 ```
-(Maybe needed for image pull by dc/production)
 oc policy add-role-to-user edit system:serviceaccount:bgwar:default
-
-oc policy add-role-to-group system:image-puller system:serviceaccounts:bgwar
-oc policy add-role-to-group system:image-puller system:serviceaccounts:bgwar:deployer
 ```
 
-#### Deploy Green app into production
+#### Deploy the Green app into production.
 
-Build a green version of the app and deploy it into testing.
+First, build a green version of the app and deploy it into testing.
 
 ```
 cp wars/green.war source/deployments/ROOT.war 
@@ -127,7 +127,7 @@ oc start-build myapp --from-dir=source
 oc deploy testing --latest
 ```
 
-Re-tag the green app for production.
+Now re-tag the green app and deploy it to production.
 ```
 oc tag bgwar/myapp:latest bgwar/myapp:production
 oc deploy production --latest
@@ -138,4 +138,8 @@ Wait for Catalina Server to finish starting.
 
 ```
 
-Verify green app has been deployed into production.
+Visit the production route to verify green app has been deployed.
+```
+oc get route
+```
+
