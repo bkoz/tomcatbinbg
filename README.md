@@ -94,10 +94,11 @@ Edit the production deployment configuration and change the `imagePullPolicy` to
 ```
 oc edit dc/production
 ```
+Example:
 ```
 spec:
       containers:
-      - image: 172.30.170.21:5000/bgwar/myapp:production
+      - image: <registry-service-ip>:5000/bgwar/myapp:production
         imagePullPolicy: Always
 ```
 
