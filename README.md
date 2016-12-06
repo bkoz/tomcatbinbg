@@ -90,14 +90,17 @@ to make sure.
 oc deploy production --cancel
 ```
 
-Edit the production deployment configuration and change the
-`imagePullPolicy` to `Always`.
-
+Edit the production deployment configuration and change the `imagePullPolicy` to `Always`.
 ```
 oc edit dc/production
-
-imagePullPolicy: Always
 ```
+```
+spec:
+      containers:
+      - image: 172.30.170.21:5000/bgwar/myapp:production
+        imagePullPolicy: Always
+```
+
 Expose the production dc and create a route for the service.
 
 ```
