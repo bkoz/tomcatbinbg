@@ -90,9 +90,13 @@ to make sure.
 oc deploy production --cancel
 ```
 
-Edit the production deployment configuration and change -> ```imagePullPolicy: Always```.
+Edit the production deployment configuration and change the
+`imagePullPolicy` to `Always`.
+
 ```
 oc edit dc/production
+
+imagePullPolicy: Always
 ```
 Expose the production dc and create a route for the service.
 
