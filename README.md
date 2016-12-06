@@ -124,6 +124,14 @@ First, build a green version of the app and deploy it into testing.
 ```
 cp wars/green.war source/deployments/ROOT.war 
 oc start-build myapp --from-dir=source
+```
+Wait for the build to suceed.
+```
+oc logs bc/myapp -f
+```
+
+Deploy green app into test.
+```
 oc deploy testing --latest
 ```
 
