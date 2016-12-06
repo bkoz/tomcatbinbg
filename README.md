@@ -79,7 +79,7 @@ testing   testing.ose-apps.haveopen.com            testing    8080
 
 #### Create the production environment.
 
-Create the production deployment config. This will trigger off of the `production` image stream tag. 
+Create the production deployment config. This will deploy using the `production` image stream tag. 
 
 ```
 oc create deploymentconfig production --image=<registry-service-ip>:5000/bgwar/myapp:production
