@@ -90,6 +90,10 @@ to make sure.
 oc deploy production --cancel
 ```
 
+Edit the production deployment configuration and change -> ```imagePullPolicy: Always```.
+```
+oc edit dc/production
+```
 Expose the production dc and create a route for the service.
 
 ```
@@ -135,6 +139,8 @@ Deploy green app into test and wait for Catalina to start.
 oc deploy testing --latest
 oc logs dc/testing -f
 ```
+
+Visit the testing route and verify the green app is running.
 
 Now re-tag the green app and deploy it to production.
 ```
