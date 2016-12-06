@@ -130,9 +130,10 @@ Wait for the build to suceed.
 oc logs bc/myapp -f
 ```
 
-Deploy green app into test.
+Deploy green app into test and wait for Catalina to start.
 ```
 oc deploy testing --latest
+oc logs dc/myapp -f
 ```
 
 Now re-tag the green app and deploy it to production.
