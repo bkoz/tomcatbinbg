@@ -133,7 +133,7 @@ $ curl --silent testing.$SUBDOMAIN | grep jpg
 $
 ```
 
-Earlier versions of OpenShift may need this user role for the image pull to suceed.
+Older versions of OpenShift may need this user role for the image pull to suceed.
 ```
 oc policy add-role-to-user edit system:serviceaccount:bgwar:default
 ```
