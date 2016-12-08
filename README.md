@@ -4,7 +4,7 @@
 
 ### Configuration
 
-#### Set OPENSHIFT_SERVER to match your OpenShift API server.
+#### Set the following variabls to match your enviroment.
 
 ```
 OPENSHIFT_API_SERVER=10.1.2.2:8443
@@ -27,7 +27,7 @@ oc new-project bgwar
 #### Create the test enviroment.
 ```
 oc new-build --image-stream=jboss-webserver30-tomcat7-openshift --name=myapp --binary=true
-oc start-build myapp --from-dir=source --follow=true --wait=true
+oc start-build myapp --from-dir=source --follow --wait
 ```
 
 Wait for the build and registry push to suceed.
@@ -66,7 +66,7 @@ Expose the testing application and create a route for it.
 oc expose dc testing --port=8080
 oc expose svc testing --name=testing 
 ```
-Get the hostname of the route and visit your application using a web browser.
+Get the hostname of the route and visit your application using `curl` or a web browser.
 
 ```
 oc get route
@@ -77,8 +77,8 @@ testing   testing.rhel-cdk.10.1.2.2.xip.io         testing    8080
 ```
 
 ```
-$ curl --silent testing.$SUBDOMAIN | grep green
-<img src="images/greenrose.jpg">
+$ curl --silent testing.$SUBDOMAIN | grep jpg
+<img src="images/bluerose.jpg">
 $
 ```
 
@@ -124,10 +124,14 @@ Tag myapp:production set to bgwar/myapp@sha256:5ba60b060226456754ba2a37963209b47
 
 ```
 ```
-oc deploy production --latest --follow=true
+oc deploy production --latest --follow
 ```
 Visit the application url and verify you see the blue rose.
-
+```
+$ curl --silent testing.$SUBDOMAIN | grep jpg
+<img src="images/bluerose.jpg">
+$
+```
 
 Earlier versions of OpenShift may need this user role for the image pull to suceed.
 ```
@@ -140,21 +144,26 @@ First, build a green version of the app and deploy it into testing.
 
 ```
 cp wars/green.war source/deployments/ROOT.war 
-oc start-build myapp --from-dir=source --follow=true --wait=true
+oc start-build myapp --from-dir=source --follow --wait
 ```
 Wait for the build to suceed.
 
 Deploy green app into test and wait for Catalina to start.
 ```
-oc deploy testing --latest --follow=true
+oc deploy testing --latest --follow
 ```
 
 Visit the testing route and verify the green app is running.
+```
+$ curl --silent testing.$SUBDOMAIN | grep jpg
+<img src="images/greenrose.jpg">
+$
+```
 
 Now re-tag the green app and deploy it to production.
 ```
 oc tag bgwar/myapp:latest bgwar/myapp:production
-oc deploy production --latest --follow=true
+oc deploy production --latest --follow
 --> Success
 ```
 Wait for Catalina Server to finish starting.
@@ -166,3 +175,8 @@ Visit the production route to verify green app has been deployed.
 oc get route
 ```
 
+```
+$ curl --silent testing.$SUBDOMAIN | grep jpg
+<img src="images/greenrose.jpg">
+$
+```
