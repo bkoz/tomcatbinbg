@@ -1,6 +1,6 @@
 # Blue/Green binary deployment to Tomcat on OpenShift v3.3
 
-## (Work in progress) Deploy from testing to production.
+## Deploy from testing to production.
 
 ### Configuration
 
@@ -26,12 +26,10 @@ oc new-project bgwar
 #### Create the test enviroment.
 ```
 oc new-build --image-stream=jboss-webserver30-tomcat7-openshift --name=myapp --binary=true
-oc start-build myapp --from-dir=source
+oc start-build myapp --from-dir=source --follow=true --wait=true
 ```
 
 Wait for the build and registry push to suceed.
-
-`oc logs bc/myapp --follow`
 
 ```
 Pushing image <registry-service-ip>:5000/bgwar/myapp:latest ...
@@ -119,7 +117,7 @@ Tag myapp:production set to bgwar/myapp@sha256:5ba60b060226456754ba2a37963209b47
 
 ```
 ```
-oc deploy production --latest
+oc deploy production --latest --follow=true
 ```
 Visit the application url and verify you see the blue rose.
 
@@ -135,17 +133,13 @@ First, build a green version of the app and deploy it into testing.
 
 ```
 cp wars/green.war source/deployments/ROOT.war 
-oc start-build myapp --from-dir=source
+oc start-build myapp --from-dir=source --follow=true --wait=true
 ```
 Wait for the build to suceed.
-```
-oc logs bc/myapp -f
-```
 
 Deploy green app into test and wait for Catalina to start.
 ```
-oc deploy testing --latest
-oc logs dc/testing -f
+oc deploy testing --latest --follow=true
 ```
 
 Visit the testing route and verify the green app is running.
@@ -153,8 +147,7 @@ Visit the testing route and verify the green app is running.
 Now re-tag the green app and deploy it to production.
 ```
 oc tag bgwar/myapp:latest bgwar/myapp:production
-oc deploy production --latest
-oc logs dc/production -f
+oc deploy production --latest --follow=true
 --> Success
 ```
 Wait for Catalina Server to finish starting.
