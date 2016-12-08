@@ -7,7 +7,8 @@
 #### Set OPENSHIFT_SERVER to match your OpenShift API server.
 
 ```
-OPENSHIFT_SERVER=masteroselab-bkocp33-utzuqe0l.srv.ravcloud.com:8443
+OPENSHIFT_API_SERVER=10.1.2.2:8443
+SUBDOMAIN=rhel-cdk.10.1.2.2.xip.io
 ```
 Clone this git repo locally.
 
@@ -19,7 +20,7 @@ cp wars/blue.war source/deployments/ROOT.war
 Login to OpenShift, create a project, a new build and start the build.
 
 ```
-oc login $OPENSHIFT_SERVER
+oc login $OPENSHIFT_API_SERVER
 oc new-project bgwar
 ```
 
@@ -72,7 +73,13 @@ oc get route
 ```
 ```
 NAME      HOST/PORT                      PATH      SERVICES   PORT      TERMINATION
-testing   testing.ose-apps.haveopen.com            testing    8080      
+testing   testing.rhel-cdk.10.1.2.2.xip.io         testing    8080      
+```
+
+```
+$ curl --silent testing.$SUBDOMAIN | grep green
+<img src="images/greenrose.jpg">
+$
 ```
 
 #### Create the production environment.
