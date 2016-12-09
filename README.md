@@ -4,7 +4,7 @@
 
 ### Configuration
 
-#### Set the following variabls to match your enviroment.
+#### Set the following variables to match your enviroment.
 
 ```
 OPENSHIFT_API_SERVER=10.1.2.2:8443
